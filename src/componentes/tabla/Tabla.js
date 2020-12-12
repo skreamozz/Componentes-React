@@ -4,8 +4,9 @@ import React from "react";
  *
  * funcion tabla que recive como parametro un arreglo de objetos con
  * los datos que se van a pintar en esta
+ * si no recibe nada, por defecto toma el valor de la asignación
  */
-const Tabla = ({ data }) => {
+const Tabla = ({ data = [{}] }) => {
   return (
     //empezamos con una tabla html tipica, con algunaas clases de bootstrap basicas para darle forma
     <table className="table table-dark table-bordered table-responsive-md table-hover">
@@ -29,7 +30,7 @@ const Tabla = ({ data }) => {
         {data.map((row, index) => (
           <tr key={index}>
             {Object.keys(row).map((key, index) => (
-              <td key={index}>{row[key]}</td>
+              <td key={index}>{row[key].toString()}</td>
             ))}
           </tr>
         ))}
