@@ -21,11 +21,13 @@ function App() {
   //efecto que se ejecuta cuando se monta el componente, este se encarga de traer los datos
   //de la api
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/posts")
-      .then((res) => res.json())
-      .then((json) => {
-        setDatosState(json);
-      });
+    //funcion de javascript que se auto-ejecuta a si misma;
+    (async () => {
+      //fetch es una api que sirve para hacer peticiones html
+      const res = await fetch("https://jsonplaceholder.typicode.com/todos");
+      const json = await res.json();
+      setDatosState(json);
+    })();
   }, []);
 
   return (
