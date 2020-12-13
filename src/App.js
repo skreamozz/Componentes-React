@@ -1,18 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import { TablaConFiltro } from "./componentes";
-//https://jsonplaceholder.typicode.com/todos
-
-//array de datos original o por defecto
-/* let datos = [
-  { id: "1", precio: 5, nombre: "desodorante" },
-  { id: "2", precio: 6, nombre: "perfume" },
-  { id: "3", precio: 7, nombre: "talco" },
-  { id: "4", precio: 8, nombre: "pepe" },
-  { id: "4", precio: 9, nombre: "ep" },
-  { id: "4", precio: 10, nombre: "pe" },
-  { id: "4", precio: 11, nombre: "p" },
-]; */
 
 function App() {
   //estado que permite actualizar el componente cuando se modifican los datos
