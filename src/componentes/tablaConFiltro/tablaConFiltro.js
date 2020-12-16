@@ -1,23 +1,41 @@
 import { useEffect, useState } from "react";
-import { Tabla } from "../../componentes";
+import { Tabla, Paginacion } from "../../componentes";
 
 /**
  *
  * este componente recive un parametro al no recivir ningun parametro
  * este toma el valor por defecto que es un arreglo con un objeto vacio
  */
+
+const obtenerInicioyFin = (actual, cantidadAmostrar) => {
+  let inicio = (actual - 1) * cantidadAmostrar;
+  let fin = inicio + cantidadAmostrar;
+  return [inicio, fin];
+};
+
 const TablaConFiltro = ({ data = [{}] }) => {
   /**
    * estados del componentes
    */
   const [filtro, setFiltro] = useState("");
   const [datos, setDatos] = useState(data);
-  //aca se utiliza un efecto que se desencadena cuando surge algun cambio en
-  //el parametro de entrada de la funcion.
-  //y lo asigna al estado del componente
+
+  /**
+   * estados para manejar la paginacion.
+   */
+  const [PaginaActual, setPaginaActual] = useState(1);
+  const [datosPaginados, setDatosPaginados] = useState(datos);
+  const ElementosAmostrar = 10;
+
   useEffect(() => {
     setDatos(data);
   }, [data]);
+
+  useEffect(() => {
+    let [inicio, fin] = obtenerInicioyFin(PaginaActual, ElementosAmostrar);
+    let datosTemp = datos.slice(inicio, fin);
+    setDatosPaginados(datosTemp);
+  }, [PaginaActual, ElementosAmostrar, datos]);
 
   //este controlador revisa los cambios del select y lo guarda
   //en el estado para poder utilizarlo a la hora de aplicar el filtro
@@ -46,6 +64,9 @@ const TablaConFiltro = ({ data = [{}] }) => {
     //si todo sale bien asignamos la nueva tabla de datos ya con los filtros aplicados
     setDatos(tempData);
   };
+  const handlePaginacion = (key) => (e) => {
+    setPaginaActual(key);
+  };
   return (
     <div className="row justify-content-center">
       <div className="col-md-7">
@@ -59,7 +80,7 @@ const TablaConFiltro = ({ data = [{}] }) => {
           <div className="input-group-append">
             <select className="custom-select" onChange={handleChange}>
               <option value="">Elija una clave</option>
-              {Object.keys(data[0]).map((key, i) => (
+              {Object.keys(datos[0]).map((key, i) => (
                 <option key={i} value={key}>
                   {key}
                 </option>
@@ -67,7 +88,16 @@ const TablaConFiltro = ({ data = [{}] }) => {
             </select>
           </div>
         </div>
-        <Tabla data={datos} />
+        <div>
+          <Paginacion
+            cantidadItems={datos.length}
+            paginaActual={PaginaActual}
+            elementosAMostrar={ElementosAmostrar}
+            handlePaginacion={handlePaginacion}
+          >
+            <Tabla data={datosPaginados} />
+          </Paginacion>
+        </div>
       </div>
     </div>
   );
