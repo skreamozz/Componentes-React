@@ -10,11 +10,13 @@ const Paginacion = ({
   const [cantPaginas, setCantPaginas] = useState(0);
   const [Items, setItems] = useState([]);
   handlePaginacion = useCallback(handlePaginacion, [handlePaginacion]);
+
   useEffect(() => {
     let paginas = Math.floor(cantidadItems / elementosAMostrar);
     if (paginas * elementosAMostrar < cantidadItems) paginas++;
     setCantPaginas(paginas);
   }, [cantidadItems, elementosAMostrar]);
+
   useEffect(() => {
     let items = [];
     for (let index = 1; index <= cantPaginas; index++) {

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import { TablaConFiltro } from "./componentes";
+import Modal from "./componentes/modal/Modal";
 
 function App() {
   //estado que permite actualizar el componente cuando se modifican los datos
