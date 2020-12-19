@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
 import { Tabla, Paginacion } from "../../componentes";
 
-/**
- *
- * este componente recive un parametro al no recivir ningun parametro
- * este toma el valor por defecto que es un arreglo con un objeto vacio
- */
-
 const obtenerInicioyFin = (actual, cantidadAmostrar) => {
   let inicio = (actual - 1) * cantidadAmostrar;
   let fin = inicio + cantidadAmostrar;
   return [inicio, fin];
 };
 
+/**
+ *
+ * este componente recibe un parametro al no recibir ningun parametro
+ * este toma el valor por defecto que es un arreglo con un objeto vacio
+ */
 const TablaConFiltro = ({ data = [{}] }) => {
   /**
    * estados del componentes
@@ -62,8 +61,11 @@ const TablaConFiltro = ({ data = [{}] }) => {
       return;
     }
     //si todo sale bien asignamos la nueva tabla de datos ya con los filtros aplicados
+    //y reseteamos la paginacion
+    setPaginaActual(1);
     setDatos(tempData);
   };
+  //controlador de la paginacion
   const handlePaginacion = (key) => (e) => {
     setPaginaActual(key);
   };
