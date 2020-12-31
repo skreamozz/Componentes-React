@@ -12,7 +12,7 @@ const Modal = ({ status = false, children, handleClose }) => {
         <span className="closeBtn" onClick={handleClose}>
           x
         </span>
-        {children}
+        <div className="overflow-auto contenedor m-2 my-2">{children}</div>
       </div>
     </div>
   );

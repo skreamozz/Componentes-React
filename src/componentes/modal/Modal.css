@@ -15,7 +15,10 @@
   display: flex;
   animation: overanimation 0.5s forwards;
 }
-
+.contenedor {
+  max-height: 80vh;
+  max-width: 100vw;
+}
 .modalCustom {
   background: #fafafa;
   min-height: 50%;
@@ -25,6 +28,9 @@
   position: relative;
   animation: modal 0.5s forwards;
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .closeBtn {

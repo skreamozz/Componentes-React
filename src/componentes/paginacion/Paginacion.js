@@ -38,8 +38,11 @@ const Paginacion = ({
         setOffset(0);
         break;
       case "ultimo":
+        const offsetTemp = cantPaginas / ItemsPaginacion - 1;
+        if (paginaActual === cantPaginas) break;
         handlePaginacion(cantPaginas)();
-        setOffset(cantPaginas / ItemsPaginacion - 1);
+        if (offsetTemp === 0) break;
+        setOffset(offsetTemp);
         break;
       default:
         break;
@@ -84,75 +87,77 @@ const Paginacion = ({
     }
   }, [cantPaginas, paginaActual, handlePaginacion, offset]);
   return (
-    <div>
-      <ul className="pagination pagination-sm">
-        <li className="page-item" onClick={handlePuntitos}>
-          <span id="primero" className="page-link user-select-none">
-            Primero
-          </span>
-        </li>
-        <li
-          onClick={handlePuntitos}
-          className={`page-item ${offset === 0 ? "disabled" : ""}`}
-        >
-          <span id="restar" className="page-link user-select-none">
-            ...
-          </span>
-        </li>
+    <div className="row">
+      <div className="col">
+        <ul className="pagination pagination-sm">
+          <li className="page-item" onClick={handlePuntitos}>
+            <span id="primero" className="page-link user-select-none">
+              Primero
+            </span>
+          </li>
+          <li
+            onClick={handlePuntitos}
+            className={`page-item ${offset === 0 ? "disabled" : ""}`}
+          >
+            <span id="restar" className="page-link user-select-none">
+              ...
+            </span>
+          </li>
 
-        {Items}
-        <li
-          onClick={handlePuntitos}
-          className={`page-item ${
-            offset * ItemsPaginacion + ItemsPaginacion >= cantPaginas
-              ? "disabled"
-              : ""
-          }`}
-        >
-          <span id="sumar" className="page-link user-select-none">
-            ...
-          </span>
-        </li>
-        <li className="page-item" onClick={handlePuntitos}>
-          <span id="ultimo" className="page-link user-select-none">
-            Ultimo
-          </span>
-        </li>
-      </ul>
-      {children}
-      <ul className="pagination pagination-sm">
-        <li className="page-item" onClick={handlePuntitos}>
-          <span id="primero" className="page-link user-select-none">
-            Primero
-          </span>
-        </li>
-        <li
-          onClick={handlePuntitos}
-          className={`page-item ${offset === 0 ? "disabled" : ""}`}
-        >
-          <span id="restar" className="page-link user-select-none">
-            ...
-          </span>
-        </li>
-        {Items}
-        <li
-          onClick={handlePuntitos}
-          className={`page-item ${
-            offset * ItemsPaginacion + ItemsPaginacion >= cantPaginas
-              ? "disabled"
-              : ""
-          }`}
-        >
-          <span id="sumar" className="page-link user-select-none">
-            ...
-          </span>
-        </li>
-        <li className="page-item" onClick={handlePuntitos}>
-          <span id="ultimo" className="page-link user-select-none">
-            Ultimo
-          </span>
-        </li>
-      </ul>
+          {Items}
+          <li
+            onClick={handlePuntitos}
+            className={`page-item ${
+              offset * ItemsPaginacion + ItemsPaginacion >= cantPaginas
+                ? "disabled"
+                : ""
+            }`}
+          >
+            <span id="sumar" className="page-link user-select-none">
+              ...
+            </span>
+          </li>
+          <li className="page-item" onClick={handlePuntitos}>
+            <span id="ultimo" className="page-link user-select-none">
+              Ultimo
+            </span>
+          </li>
+        </ul>
+        {children}
+        <ul className="pagination pagination-sm">
+          <li className="page-item" onClick={handlePuntitos}>
+            <span id="primero" className="page-link user-select-none">
+              Primero
+            </span>
+          </li>
+          <li
+            onClick={handlePuntitos}
+            className={`page-item ${offset === 0 ? "disabled" : ""}`}
+          >
+            <span id="restar" className="page-link user-select-none">
+              ...
+            </span>
+          </li>
+          {Items}
+          <li
+            onClick={handlePuntitos}
+            className={`page-item ${
+              offset * ItemsPaginacion + ItemsPaginacion >= cantPaginas
+                ? "disabled"
+                : ""
+            }`}
+          >
+            <span id="sumar" className="page-link user-select-none">
+              ...
+            </span>
+          </li>
+          <li className="page-item" onClick={handlePuntitos}>
+            <span id="ultimo" className="page-link user-select-none">
+              Ultimo
+            </span>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 };
