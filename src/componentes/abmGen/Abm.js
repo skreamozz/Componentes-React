@@ -2,13 +2,7 @@ import { useEffect, useState } from "react";
 import { Paginacion, Tabla, Modal } from "../../componentes";
 import { FaTrashAlt, FaPencilAlt } from "react-icons/fa";
 import { BsFillPlusCircleFill } from "react-icons/bs";
-
-//funcion útil para obtener el offset de la páginacion.
-const obtenerInicioyFin = (actual, cantidadAmostrar) => {
-  let inicio = (actual - 1) * cantidadAmostrar;
-  let fin = inicio + cantidadAmostrar;
-  return [inicio, fin];
-};
+import { obtenerInicioyFin } from "../../utiles";
 
 const claseSeleccion = "table-primary";
 
@@ -20,8 +14,10 @@ const claseSeleccion = "table-primary";
  *  camposOcultos:string[],
  *  itemsPorPagina:number
  * }} props
- *
- *
+ *  @param {string} titulo Titulo que va a tener el abm
+ *  @param {string} urls endpoint donde se realizaran las peticiones html
+ *  @param {string[]} camposOcultos campos que van a ser ocultados a la hora de renderizar el abm
+ *  @param {number} itemsPorPagina cantidad de filas que se van a mostrar en cada pagina de la tabla
  */
 const Abm = ({ titulo, urls, camposOcultos, itemsPorPagina = 10 }) => {
   const [paginaActual, setPaginaActual] = useState(1);
@@ -71,12 +67,17 @@ const Abm = ({ titulo, urls, camposOcultos, itemsPorPagina = 10 }) => {
     parentNode.classList.toggle(claseSeleccion);
     setSelectedRow({ row, el: parentNode });
   };
-
+  //controlador de los eventos de la botonera.
   const handleClick = (accion) => (e) => {
+    let FormBase = <form></form>;
+
     if (data.length <= 0) return;
+
+    //obtiene los campos de la tabla excluyendo los que estan ocultos
     let campos = Object.keys(data[0]).filter(
       (key) => !camposOcultos.includes(key)
     );
+    //obtiene los tipos que contienen las diferentes celdas de la tabla
     let types = [
       ...campos.map((campo) => {
         switch (typeof data[0][campo]) {
@@ -89,7 +90,8 @@ const Abm = ({ titulo, urls, camposOcultos, itemsPorPagina = 10 }) => {
         }
       }),
     ];
-    let FormBase = <form></form>;
+
+    //evalua que boton se preciono y se arma el formulario correspondiente a esa accion
     switch (accion) {
       case "nuevo":
         if (selectedRow) {
@@ -163,6 +165,13 @@ const Abm = ({ titulo, urls, camposOcultos, itemsPorPagina = 10 }) => {
     setIsOpenModal(true);
   };
 
+  const handlePaginacion = (pagina) => (e) => {
+    setPaginaActual(pagina);
+    if (selectedRow) {
+      selectedRow.el.classList.toggle(claseSeleccion);
+      setSelectedRow(undefined);
+    }
+  };
   return (
     <div className="container">
       <div className="row justify-content-center p-4">
@@ -176,13 +185,7 @@ const Abm = ({ titulo, urls, camposOcultos, itemsPorPagina = 10 }) => {
             cantidadItems={data.length}
             paginaActual={paginaActual}
             elementosAMostrar={itemsPorPagina}
-            handlePaginacion={(pagina) => (e) => {
-              setPaginaActual(pagina);
-              if (selectedRow) {
-                selectedRow.el.classList.toggle(claseSeleccion);
-                setSelectedRow(undefined);
-              }
-            }}
+            handlePaginacion={handlePaginacion}
           >
             <Tabla
               data={dataPaginada}

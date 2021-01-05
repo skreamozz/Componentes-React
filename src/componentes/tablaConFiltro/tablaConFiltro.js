@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
 import { Tabla, Paginacion } from "../../componentes";
-
-const obtenerInicioyFin = (actual, cantidadAmostrar) => {
-  let inicio = (actual - 1) * cantidadAmostrar;
-  let fin = inicio + cantidadAmostrar;
-  return [inicio, fin];
-};
+import { obtenerInicioyFin } from "../../utiles";
 
 /**
  *

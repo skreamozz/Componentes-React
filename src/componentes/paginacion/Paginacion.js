@@ -41,7 +41,7 @@ const Paginacion = ({
         const offsetTemp = cantPaginas / ItemsPaginacion - 1;
         if (paginaActual === cantPaginas) break;
         handlePaginacion(cantPaginas)();
-        if (offsetTemp === 0) break;
+        if (offsetTemp <= 0) break;
         setOffset(offsetTemp);
         break;
       default:

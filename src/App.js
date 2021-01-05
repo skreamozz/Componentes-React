@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { Abm, CustomCheck, TablaConFiltro } from "./componentes";
+import { Abm, CustomCheck, Lupa, Modal, TablaConFiltro } from "./componentes";
 
 function App() {
   //estado que permite actualizar el componente cuando se modifican los datos
@@ -61,12 +61,15 @@ function App() {
           <TablaConFiltro data={datosState} />
         </div>
       </div> */}
-      <Abm
+      {/* <Abm
         titulo="productos"
         urls="https://jsonplaceholder.typicode.com/todos"
         camposOcultos={["id"]}
         itemsPorPagina={5}
-      />
+      /> */}
+      <Modal status={true}>
+        <Lupa data={datosState} />
+      </Modal>
     </div>
   );
 }
