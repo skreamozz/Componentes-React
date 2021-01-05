@@ -1,3 +1,4 @@
 # proyecto de ejemplo para Adrian.
 
-## podemos ver la realización de una tabla dinamica con un filtro
+## ejercicio donde se realizan varios componentes dinamicos con react.
+
