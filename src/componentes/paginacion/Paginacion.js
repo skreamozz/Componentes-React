@@ -27,7 +27,7 @@ const Paginacion = ({
     if (target.classList.contains("disabled")) return;
     switch (target.id) {
       case "restar":
-        if (offset === 0) return;
+        if (offset <= 0) return;
         setOffset(offset - 1);
         break;
       case "sumar":
@@ -67,18 +67,15 @@ const Paginacion = ({
   useEffect(() => {
     let items = [];
     for (let index = 1; index <= ItemsPaginacion; index++) {
-      if (index + ItemsPaginacion * offset <= cantPaginas) {
+      let pagina = Math.floor(index + ItemsPaginacion * offset);
+      if (pagina <= cantPaginas && pagina > 0) {
         items.push(
           <li
             key={index}
-            className={`page-item ${
-              paginaActual === index + ItemsPaginacion * offset && "active"
-            }`}
-            onClick={handlePaginacion(index + ItemsPaginacion * offset)}
+            className={`page-item ${paginaActual === pagina && "active"}`}
+            onClick={handlePaginacion(pagina)}
           >
-            <span className="page-link user-select-none">
-              {index + ItemsPaginacion * offset}
-            </span>
+            <span className="page-link user-select-none">{pagina}</span>
           </li>
         );
       }

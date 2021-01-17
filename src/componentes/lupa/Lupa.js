@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Paginacion, Tabla } from "..";
-import { obtenerInicioyFin } from "../../utiles";
+import usePaginacion from "../../hooks/usePaginacion";
 
 /**
  *
@@ -36,13 +36,18 @@ const Lupa = ({
   onRowDobleClick = () => {},
   itemsPorPagina = 5,
 }) => {
-  const [paginaActual, setPaginaActual] = useState(1);
-  const [dataPaginada, setDataPaginada] = useState([{}]);
-  const [dataFiltrada, setDataFiltrada] = useState([{}]);
   const [campos, setCampos] = useState([]);
 
+  const [dataFiltrada, setDataFiltrada] = useState([{}]);
   const [filtros, setFiltros] = useState({ selectUno: "", selectDos: "" });
   const [inputs, setInputs] = useState({ inputUno: "", inputDos: "" });
+
+  const {
+    dataPaginada,
+    paginaActual,
+    handlePaginacion,
+    setPaginaActual,
+  } = usePaginacion(itemsPorPagina, dataFiltrada);
 
   /**
    *
@@ -59,11 +64,13 @@ const Lupa = ({
       .filter((row) => filtrar(row[filtros.selectDos], inputs.inputDos));
 
     if (dataFiltradaTemp.length === 0) {
-      setDataFiltrada(data);
+      setDataFiltrada([
+        { error: "no se encontro ningun campo que coincida con la busqueda." },
+      ]);
       return;
     }
     setDataFiltrada(dataFiltradaTemp);
-  }, [inputs, filtros, data]);
+  }, [inputs, filtros, data, setPaginaActual]);
 
   //efecto encargado de obtener los nombres de los campos excluyendo los que estan ocultos
   //segun el arreglo pasado por propiedades.
@@ -76,21 +83,12 @@ const Lupa = ({
     setFiltros({ selectUno: CamposTemp[0], selectDos: CamposTemp[0] });
   }, [camposOcultos, data]);
 
-  //efecto encargado de obtener la pagina que se va a mostrar segun la paginacion.
-  useEffect(() => {
-    let [inicio, fin] = obtenerInicioyFin(paginaActual, itemsPorPagina);
-    setDataPaginada(dataFiltrada.slice(inicio, fin));
-  }, [paginaActual, dataFiltrada, itemsPorPagina]);
-
   /**
    *
    * manejadores de eventos.
    *
    */
 
-  const handlePaginacion = (pagina) => (e) => {
-    setPaginaActual(pagina);
-  };
   const handleSelectChange = (e) => {
     setFiltros({ ...filtros, [e.target.name]: e.target.value });
   };

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 /**
  *
- * funcion tabla que recibe como parametro un arreglo de objetos con
+ * Componente tabla que recibe como parametro un arreglo de objetos con
  * los datos que se van a pintar en esta
  * si no recibe nada, por defecto toma el valor de la asignación
  * @param {{
@@ -67,6 +67,9 @@ const Tabla = ({
       </table>
     </div>
   );
+};
+Tabla.defaultProps = {
+  data: [{}],
 };
 
 //luego exporto la tabla para poder utilizarla en otra parte del codigo

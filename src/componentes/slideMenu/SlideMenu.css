@@ -1,0 +1,49 @@
+.slide {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+
+  background: royalblue;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  transition: all 0.5s ease;
+}
+.slide.openSlide {
+  width: 10rem;
+}
+.slide.closeSlide {
+  width: 4rem;
+}
+.slide .Bread {
+  font-size: 20px;
+  position: absolute;
+  top: 1em;
+  left: 1em;
+}
+.slide .Bread:hover {
+  cursor: pointer;
+}
+
+.slide ul {
+  list-style: none;
+  padding: 10px;
+}
+.slide ul li {
+  display: block;
+  min-width: 10rem;
+  padding: 10px 0;
+}
+.slide ul li a {
+  text-decoration: none;
+  color: white;
+  padding: 5px;
+  margin: 5px;
+}
+.slide ul li a svg {
+  margin: 0px 0.5em;
+  font-size: 25px;
+}

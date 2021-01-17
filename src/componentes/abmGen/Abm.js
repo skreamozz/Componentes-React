@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Paginacion, Tabla, Modal } from "../../componentes";
 import { FaTrashAlt, FaPencilAlt } from "react-icons/fa";
 import { BsFillPlusCircleFill } from "react-icons/bs";
-import { obtenerInicioyFin } from "../../utiles";
+import usePaginacion from "../../hooks/usePaginacion";
 
 const claseSeleccion = "table-primary";
 
@@ -20,14 +20,22 @@ const claseSeleccion = "table-primary";
  *  @param {number} itemsPorPagina cantidad de filas que se van a mostrar en cada pagina de la tabla
  */
 const Abm = ({ titulo, urls, camposOcultos, itemsPorPagina = 10 }) => {
-  const [paginaActual, setPaginaActual] = useState(1);
-  const [dataPaginada, setDataPaginada] = useState([{}]);
-
   const [data, setData] = useState([{}]);
   const [selectedRow, setSelectedRow] = useState();
 
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [modalForm, setModalForm] = useState();
+
+  const { dataPaginada, paginaActual, setPaginaActual } = usePaginacion(
+    itemsPorPagina,
+    data
+  );
+
+  /****************************************************************************
+   *                                                                           *
+   *                            Efectos                                        *
+   *                                                                           *
+   *****************************************************************************/
 
   //efecto que se encarga de hacer fetch a la api para traer
   //todos los datos del abm
@@ -45,14 +53,11 @@ const Abm = ({ titulo, urls, camposOcultos, itemsPorPagina = 10 }) => {
     })();
   }, [urls]);
 
-  //efecto que se encarga de obtener la pagina correspondiente de la tabla
-  useEffect(() => {
-    let [inicio, fin] = obtenerInicioyFin(paginaActual, itemsPorPagina);
-    if (Array.isArray(data)) {
-      let datosTemp = data.slice(inicio, fin);
-      setDataPaginada(datosTemp);
-    }
-  }, [data, paginaActual, itemsPorPagina]);
+  /****************************************************************************
+   *                                                                           *
+   *                            Manejadores de eventos                         *
+   *                                                                           *
+   *****************************************************************************/
 
   //evento correspondiente a cliquear una fila
   const onRowClick = (row) => (e) => {
@@ -172,6 +177,7 @@ const Abm = ({ titulo, urls, camposOcultos, itemsPorPagina = 10 }) => {
       setSelectedRow(undefined);
     }
   };
+
   return (
     <div className="container">
       <div className="row justify-content-center p-4">
