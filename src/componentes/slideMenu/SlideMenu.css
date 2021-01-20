@@ -37,13 +37,48 @@
   min-width: 10rem;
   padding: 10px 0;
 }
-.slide ul li a {
+.slide ul li .link {
   text-decoration: none;
   color: white;
   padding: 5px;
   margin: 5px;
+  cursor: pointer;
 }
-.slide ul li a svg {
+.slide ul li .link svg {
   margin: 0px 0.5em;
   font-size: 25px;
+}
+
+.slide .submenu-item {
+  background: rgba(255, 255, 255, 0.2);
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.2);
+}
+
+.slide .submenu.Close {
+  animation: 0.2s CloseSub forwards ease;
+}
+.slide .submenu.Open {
+  animation: OpenSub 0.2s forwards;
+}
+
+@keyframes CloseSub {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-500px);
+    position: absolute;
+  }
+}
+
+@keyframes OpenSub {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+    position: inherit;
+  }
 }

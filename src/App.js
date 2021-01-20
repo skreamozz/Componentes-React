@@ -1,15 +1,7 @@
 import { useEffect, useState } from "react";
-import "./App.css";
-import { BsLayers, BsList, BsSearch } from "react-icons/bs";
-import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
-import {
-  Abm,
-  CustomCheck,
-  Lupa,
-  Modal,
-  SlideMenu,
-  TablaConFiltro,
-} from "./componentes";
+import { BsArchiveFill, BsLayers, BsSearch } from "react-icons/bs";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { Abm, Lupa, Modal, SlideMenu } from "./componentes";
 
 function App() {
   //estado que permite actualizar el componente cuando se modifican los datos
@@ -32,6 +24,7 @@ function App() {
       <BrowserRouter>
         <div className="row">
           <div className="col offset-1">
+            {/** Switch que contiene las rutas y los componentes a renderizar*/}
             <Switch>
               <Route
                 path="/abm"
@@ -54,26 +47,38 @@ function App() {
                   </Modal>
                 )}
               />
+              <Route path="/" />
             </Switch>
 
             <SlideMenu
               Items={[
-                <Link to="/abm">
-                  <BsLayers />
-                  Abm
-                </Link>,
-                <Link to="/lupa">
-                  <BsSearch />
-                  Lupa
-                </Link>,
+                {
+                  to: "/Abm",
+                  icono: <BsLayers />,
+                  texto: "Abm",
+                },
+                { to: "/lupa", icono: <BsSearch />, texto: "Lupa" },
+                {
+                  icono: <BsArchiveFill />,
+                  texto: "Files",
+                  sub: [
+                    { to: "/Abm", icono: <BsLayers />, texto: "Abm" },
+                    { to: "/Abm", icono: <BsLayers />, texto: "Abm" },
+                  ],
+                },
+                {
+                  icono: <BsArchiveFill />,
+                  texto: "Files",
+                  sub: [
+                    { to: "/Abm", icono: <BsLayers />, texto: "Abm" },
+                    { to: "/Abm", icono: <BsLayers />, texto: "Abm" },
+                  ],
+                },
               ]}
             />
           </div>
         </div>
       </BrowserRouter>
-      {/* <Modal status={true}>
-        <Lupa data={datosState} camposOcultos={["id", "userId"]} />
-      </Modal> */}
     </div>
   );
 }

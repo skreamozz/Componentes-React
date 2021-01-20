@@ -1,12 +1,44 @@
-import { BsList, BsSearch } from "react-icons/bs";
+import { Link } from "react-router-dom";
 import { AiOutlineMenu } from "react-icons/ai";
 import { IconContext } from "react-icons";
+import { useEffect, useState } from "react";
 import "./SlideMenu.css";
-import { useState } from "react";
+
+/**
+ *
+ * @param {[{to:string,icono:Icon, texto:string}]} param0
+ *
+ * @arugments to: ruta a la que se va a dirigir el Link
+ * @arugments icono: icono que se va a mostrar en el elemento
+ * @arguments texto: label que va a tener el elemento
+ */
 const SlideMenu = ({ Items }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [ItemState, setItemState] = useState([]);
   const handleClick = (e) => {
     setIsOpen(!isOpen);
+  };
+  useEffect(() => {
+    setItemState(
+      Items.map((item) => {
+        if (item?.sub) {
+          item.sub.open = false;
+        }
+        return item;
+      })
+    );
+  }, [Items]);
+
+  const handleSubMenu = (Itemindex) => (e) => {
+    let itemStateTemp = ItemState.map((item, index) => {
+      if (index === Itemindex) {
+        item.sub.open = !item.sub.open;
+      } else if (item?.sub) {
+        item.sub.open = false;
+      }
+      return item;
+    });
+    setItemState(itemStateTemp);
   };
   return (
     <div className={`slide ${isOpen ? "openSlide" : "closeSlide"}`}>
@@ -16,8 +48,28 @@ const SlideMenu = ({ Items }) => {
         </div>
       </IconContext.Provider>
       <ul>
-        {Items?.map((item) => (
-          <li>{item}</li>
+        {ItemState?.map((item, index) => (
+          <li onClick={item.to ? () => {} : handleSubMenu(index)} key={index}>
+            <Link className="link" to={item?.to}>
+              {item.icono} {item.texto}
+            </Link>
+            {item.sub ? (
+              <ul
+                className={`submenu ${
+                  isOpen && item.sub.open ? "Open" : "Close"
+                }`}
+              >
+                {item.sub?.map((sub, index) => (
+                  <li key={index} className="submenu-item">
+                    <Link to={sub.to} className="link">
+                      {sub.icono}
+                      {sub.texto}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : null}
+          </li>
         ))}
       </ul>
     </div>
