@@ -48,6 +48,13 @@ const Paginacion = ({
         break;
     }
   };
+
+  /**************************
+   *
+   *          Efectos
+   *
+   **************************/
+
   //efecto encargado de verificar y resetear el ofset cuando la pagina sea = a 1
   useEffect(() => {
     if (paginaActual === 1) {
@@ -83,6 +90,7 @@ const Paginacion = ({
       setItems(items);
     }
   }, [cantPaginas, paginaActual, handlePaginacion, offset]);
+
   return (
     <div className="row">
       <div className="col">

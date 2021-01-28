@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { BsArchiveFill, BsLayers, BsSearch } from "react-icons/bs";
+import { BsArchiveFill, BsLayers, BsSearch, BsTable } from "react-icons/bs";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import { Abm, Lupa, Modal, SlideMenu } from "./componentes";
+import { Abm, DataTable, Lupa, Modal, SlideMenu } from "./componentes";
 
 function App() {
   //estado que permite actualizar el componente cuando se modifican los datos
@@ -47,6 +47,21 @@ function App() {
                   </Modal>
                 )}
               />
+              <Route
+                path="/DataTable"
+                exact
+                render={() => (
+                  <div className="row justify-content-center align-items-center vh-100">
+                    <div className="col">
+                      <DataTable
+                        data={datosState}
+                        camposOcultos={["userId"]}
+                        itemsPorPagina={5}
+                      />
+                    </div>
+                  </div>
+                )}
+              />
               <Route path="/" />
             </Switch>
 
@@ -62,7 +77,11 @@ function App() {
                   icono: <BsArchiveFill />,
                   texto: "Files",
                   sub: [
-                    { to: "/Abm", icono: <BsLayers />, texto: "Abm" },
+                    {
+                      to: "/DataTable",
+                      icono: <BsTable />,
+                      texto: "DataTable",
+                    },
                     { to: "/Abm", icono: <BsLayers />, texto: "Abm" },
                   ],
                 },

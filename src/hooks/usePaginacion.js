@@ -12,6 +12,7 @@ const usePaginacion = (itemsPorPagina, data) => {
   const [paginaActual, setPaginaActual] = useState(1);
   const [dataPaginada, setDataPaginada] = useState([{}]);
 
+  //efecto encargado de obtener cada pagina segun la pagina en la que se encuentre.
   useEffect(() => {
     let [inicio, fin] = obtenerInicioyFin(paginaActual, itemsPorPagina);
     setDataPaginada(data.slice(inicio, fin));

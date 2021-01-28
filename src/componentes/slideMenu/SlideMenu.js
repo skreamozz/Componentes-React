@@ -15,9 +15,7 @@ import "./SlideMenu.css";
 const SlideMenu = ({ Items }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [ItemState, setItemState] = useState([]);
-  const handleClick = (e) => {
-    setIsOpen(!isOpen);
-  };
+
   useEffect(() => {
     setItemState(
       Items.map((item) => {
@@ -28,6 +26,10 @@ const SlideMenu = ({ Items }) => {
       })
     );
   }, [Items]);
+
+  const handleClick = (e) => {
+    setIsOpen(!isOpen);
+  };
 
   const handleSubMenu = (Itemindex) => (e) => {
     let itemStateTemp = ItemState.map((item, index) => {
@@ -49,15 +51,18 @@ const SlideMenu = ({ Items }) => {
       </IconContext.Provider>
       <ul>
         {ItemState?.map((item, index) => (
-          <li onClick={item.to ? () => {} : handleSubMenu(index)} key={index}>
-            <Link className="link" to={item?.to}>
-              {item.icono} {item.texto}
-            </Link>
+          <div key={index}>
+            <li onClick={item.to ? () => {} : handleSubMenu(index)}>
+              <Link className="link" to={item?.to}>
+                {item.icono} {item.texto}
+              </Link>
+            </li>
             {item.sub ? (
               <ul
                 className={`submenu ${
                   isOpen && item.sub.open ? "Open" : "Close"
                 }`}
+                id={index}
               >
                 {item.sub?.map((sub, index) => (
                   <li key={index} className="submenu-item">
@@ -69,7 +74,7 @@ const SlideMenu = ({ Items }) => {
                 ))}
               </ul>
             ) : null}
-          </li>
+          </div>
         ))}
       </ul>
     </div>

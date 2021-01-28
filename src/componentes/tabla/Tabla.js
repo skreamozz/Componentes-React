@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-
+import { FaSortUp, FaSortDown, FaSort } from "react-icons/fa";
 /**
  *
  * Componente tabla que recibe como parametro un arreglo de objetos con
@@ -9,7 +9,8 @@ import React, { useEffect, useState } from "react";
  *  data:Array,
  *  onRowClick:(row) => (e)=>{},
  *  onRowDobleClick:(row) => (e)=>{},
- *  camposOcultos:string[]
+ *  camposOcultos:string[],
+ *  onHeaderSort:() => {}
  * }} props
  */
 const Tabla = ({
@@ -17,8 +18,10 @@ const Tabla = ({
   onRowClick = () => {},
   onRowDobleClick = () => {},
   camposOcultos = [],
+  onHeaderSort,
 }) => {
   const [campos, setCampos] = useState([]);
+  const [sortUp, setSortUp] = useState({});
 
   useEffect(() => {
     let keys = Object.keys(data[0]);
@@ -27,19 +30,43 @@ const Tabla = ({
     }
     setCampos(keys);
   }, [data, camposOcultos]);
+  const handleHeaderClick = (e) => {
+    const { textContent } = e.target;
+    setSortUp({ ...sortUp, [textContent]: !sortUp[textContent] });
+    if (!onHeaderSort) return;
+    onHeaderSort({
+      [textContent]: !sortUp[textContent],
+    });
+  };
 
   return (
     //empezamos con una tabla html tipica, con algunaas clases de bootstrap basicas para darle forma
-    <div className="table-responsive-md">
-      <table className="table shadow table-striped table-md table-hover">
-        <thead className="thead-dark">
-          <tr>
+    <div className="table-responsive-md ">
+      <table className="table  shadow table-striped table-md table-hover rounded">
+        <thead className="thead-dark ">
+          <tr className="">
             {/*aca obtengo todas las propiedades que tienen los objetos y las recorro para armar un header
             que se corresponda con la estructura de los objetos, esto podriamos procesar los datos y darle 
             el nombre que quisieramos tambien
           */}
             {campos.map((key, index) => (
-              <th key={index}>{key}</th>
+              <th
+                style={{ minWidth: "6rem", cursor: "pointer" }}
+                key={index}
+                className="user-select-none"
+                onClick={handleHeaderClick}
+              >
+                {key}
+                {onHeaderSort ? (
+                  sortUp[key] === undefined ? (
+                    <FaSort />
+                  ) : sortUp[key] ? (
+                    <FaSortUp />
+                  ) : (
+                    <FaSortDown />
+                  )
+                ) : null}
+              </th>
             ))}
           </tr>
         </thead>
@@ -57,8 +84,19 @@ const Tabla = ({
               key={index}
             >
               {campos.map((campo, index) => {
-                if (row[campo] !== undefined)
+                if (row[campo] !== undefined) {
+                  if (typeof row[campo] === "boolean")
+                    return (
+                      <td key={index}>
+                        <input
+                          type="checkbox"
+                          onChange={() => {}}
+                          checked={row[campo]}
+                        />
+                      </td>
+                    );
                   return <td key={index}>{row[campo].toString()}</td>;
+                }
                 return undefined;
               })}
             </tr>
