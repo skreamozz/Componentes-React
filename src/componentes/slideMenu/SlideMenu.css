@@ -2,6 +2,10 @@ body {
   font-size: 16px;
 }
 
+/*
+  Slide
+*/
+
 .slide {
   position: fixed;
   top: 0;
@@ -15,6 +19,7 @@ body {
   justify-content: center;
   align-items: flex-start;
   transition: all 0.5s ease;
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
 }
 .slide.openSlide {
   width: 10em;
@@ -22,6 +27,14 @@ body {
 .slide.closeSlide {
   width: 4em;
 }
+
+/*
+  fin Slide
+*/
+
+/* 
+  boton Bread
+*/
 
 .slide .Bread {
   font-size: 20px;
@@ -33,15 +46,25 @@ body {
   cursor: pointer;
 }
 
+/* 
+  fin boton Bread.
+*/
+
+/*
+  controles del menu.
+*/
+
 .slide ul {
   list-style: none;
   padding: 10px;
 }
+
 .slide ul li {
   display: block;
   min-width: 10rem;
   padding: 10px 0;
 }
+
 .slide ul li .link {
   text-decoration: none;
   color: white;
@@ -49,29 +72,53 @@ body {
   margin: 5px;
   cursor: pointer;
 }
+
 .slide ul li .link svg {
   margin: 0px 0.5em;
   font-size: 25px;
 }
 
-.slide .submenu-item {
-  background: rgba(255, 255, 255, 0.2);
-  border-bottom: 0.5px solid rgba(0, 0, 0, 0.2);
+/*
+  fin Controles del menu
+*/
+
+/*
+  SubMenu
+*/
+
+.slide.closeSlide .submenu {
+  padding: 0;
+}
+
+.slide .submenu {
+  transition: all 0.3s;
 }
 
 .slide .submenu.Close {
-  animation: 0.2s CloseSub forwards ease;
+  animation: 0.26s CloseSub forwards ease-in-out;
 }
+
 .slide .submenu.Open {
-  animation: OpenSub 0.2s forwards;
+  animation: OpenSub 0.26s forwards;
 }
+
+.slide .submenu-item {
+  background: rgba(255, 255, 255, 0.2);
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.2);
+  transition: all 0.2s;
+  border-radius: 3rem;
+}
+
+/*end SubMenu*/
 
 @keyframes CloseSub {
   0% {
     opacity: 1;
   }
-  100% {
+  10% {
     opacity: 0;
+  }
+  100% {
     transform: translateX(-500px);
     position: absolute;
   }

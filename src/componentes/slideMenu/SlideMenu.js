@@ -43,7 +43,7 @@ const SlideMenu = ({ Items }) => {
     setItemState(itemStateTemp);
   };
   return (
-    <div className={`slide ${isOpen ? "openSlide" : "closeSlide"}`}>
+    <div className={`slide  ${isOpen ? "openSlide" : "closeSlide"}`}>
       <IconContext.Provider value={{ color: "white" }}>
         <div className="Bread" onClick={handleClick}>
           <AiOutlineMenu />
@@ -53,15 +53,13 @@ const SlideMenu = ({ Items }) => {
         {ItemState?.map((item, index) => (
           <div key={index}>
             <li onClick={item.to ? () => {} : handleSubMenu(index)}>
-              <Link className="link" to={item?.to}>
+              <Link className="link" to={item?.to || "#"}>
                 {item.icono} {item.texto}
               </Link>
             </li>
             {item.sub ? (
               <ul
-                className={`submenu ${
-                  isOpen && item.sub.open ? "Open" : "Close"
-                }`}
+                className={`submenu  ${item.sub.open ? "Open" : "Close"}`}
                 id={index}
               >
                 {item.sub?.map((sub, index) => (

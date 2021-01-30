@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { FaSortUp, FaSortDown, FaSort } from "react-icons/fa";
+import {
+  FaSortUp,
+  FaSortDown,
+  FaSort,
+  FaFilter,
+  FaWindowClose,
+} from "react-icons/fa";
 /**
  *
  * Componente tabla que recibe como parametro un arreglo de objetos con
@@ -10,8 +16,11 @@ import { FaSortUp, FaSortDown, FaSort } from "react-icons/fa";
  *  onRowClick:(row) => (e)=>{},
  *  onRowDobleClick:(row) => (e)=>{},
  *  camposOcultos:string[],
- *  onHeaderSort:() => {}
+ *  onHeaderSort:(campo:{name:string,direction:boolean}) => {},
+ *  onFilter:(filterInputs:object) =>{}
  * }} props
+ *  @param  onHeaderSort evento de ordenamiento de la tabla
+ *  @param  onFilter evento que se desencadena al actualizar los filtros. funcion de filtro.
  */
 const Tabla = ({
   data,
@@ -19,63 +28,142 @@ const Tabla = ({
   onRowDobleClick = () => {},
   camposOcultos = [],
   onHeaderSort,
+  onFilter,
 }) => {
   const [campos, setCampos] = useState([]);
   const [sortUp, setSortUp] = useState({});
+  const [openFilter, setOpenFilter] = useState({});
+  const [filterInputs, setFilterInputs] = useState({});
 
   useEffect(() => {
     let keys = Object.keys(data[0]);
+
     if (camposOcultos.length) {
       keys = keys.filter((key) => !camposOcultos.includes(key));
     }
+
     setCampos(keys);
   }, [data, camposOcultos]);
-  const handleHeaderClick = (e) => {
-    const { textContent } = e.target;
-    setSortUp({ ...sortUp, [textContent]: !sortUp[textContent] });
+
+  //controlador del evento de click en el header
+  const handleHeaderClick = (campo) => (e) => {
+    e.stopPropagation();
+    setSortUp({ [campo]: !sortUp[campo] });
     if (!onHeaderSort) return;
     onHeaderSort({
-      [textContent]: !sortUp[textContent],
+      name: campo,
+      direction: !sortUp[campo],
     });
+  };
+
+  const handleFilterClick = (key) => (e) => {
+    e.stopPropagation();
+    setOpenFilter({
+      [key]: !openFilter[key],
+    });
+  };
+
+  const handleFilterInput = (e) => {
+    const { name, value } = e.target;
+    const filterInputsTemp = { ...filterInputs, [name]: value };
+    setFilterInputs(filterInputsTemp);
+    onFilter(filterInputsTemp);
+  };
+
+  const handleFilterCancel = (key) => (e) => {
+    e.stopPropagation();
+    handleFilterInput({
+      target: { name: key, value: "" },
+    });
+    setOpenFilter({ ...openFilter, [key]: false });
   };
 
   return (
     //empezamos con una tabla html tipica, con algunaas clases de bootstrap basicas para darle forma
     <div className="table-responsive-md ">
-      <table className="table  shadow table-striped table-md table-hover rounded">
+      <table className="table  shadow   table-striped  table-hover rounded ">
         <thead className="thead-dark ">
           <tr className="">
-            {/*aca obtengo todas las propiedades que tienen los objetos y las recorro para armar un header
-            que se corresponda con la estructura de los objetos, esto podriamos procesar los datos y darle 
-            el nombre que quisieramos tambien
-          */}
             {campos.map((key, index) => (
               <th
-                style={{ minWidth: "6rem", cursor: "pointer" }}
+                style={{ minWidth: "6rem" }}
                 key={index}
                 className="user-select-none"
-                onClick={handleHeaderClick}
               >
-                {key}
-                {onHeaderSort ? (
-                  sortUp[key] === undefined ? (
-                    <FaSort />
-                  ) : sortUp[key] ? (
-                    <FaSortUp />
-                  ) : (
-                    <FaSortDown />
-                  )
-                ) : null}
+                <div className="d-flex justify-content-between align-items-center">
+                  {/* Sorter */}
+                  <div
+                    onClick={handleHeaderClick(key)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    {key}
+                    <span className="mx-1">
+                      {onHeaderSort ? (
+                        sortUp[key] === undefined ? (
+                          <FaSort />
+                        ) : sortUp[key] ? (
+                          <FaSortUp />
+                        ) : (
+                          <FaSortDown />
+                        )
+                      ) : null}
+                    </span>
+                  </div>
+                  {/* end Sorter */}
+                  {/* Filtros */}
+                  {onFilter ? (
+                    <div
+                      className={` ${
+                        filterInputs[key] && filterInputs[key] !== ""
+                          ? "bg-primary"
+                          : ""
+                      } rounded px-2 text-center align-self-end p-relative`}
+                      onClick={handleFilterClick(key)}
+                    >
+                      <FaFilter style={{ fontSize: ".8rem" }} />
+                      {/* DropDown */}
+                      <ul
+                        onClick={(e) => e.stopPropagation()}
+                        className={`${
+                          !openFilter[key] ? "d-none" : ""
+                        } position-absolute bg-light text-dark list-group mt-2`}
+                        style={{
+                          transform: "translateX(-50%)",
+                          zIndex: "1000",
+                        }}
+                      >
+                        <li className="list-group-item">
+                          <h6>Filtro {key}</h6>
+                        </li>
+                        <li className="list-group-item">
+                          <div className="form-group py-1 px-3">
+                            <input
+                              name={key}
+                              value={filterInputs[key] || ""}
+                              type="text"
+                              className="form-control-sm"
+                              onChange={handleFilterInput}
+                            />
+                            <label
+                              onClick={handleFilterCancel(key)}
+                              className="position-absolute px-2 mx-1  text-center "
+                            >
+                              <FaWindowClose />
+                            </label>
+                          </div>
+                        </li>
+                      </ul>
+                      {/* End DropDown */}
+                    </div>
+                  ) : null}
+                  {/* end Filtros */}
+                </div>
               </th>
             ))}
           </tr>
         </thead>
+        {/* Cuerpo de la tabla */}
         <tbody>
-          {/**aca recorro todo el array objeto por objeto y voy pintando por cada objeto
-           * una nueva fila de la tabla.
-           * en cada fila de la tabla voy recorriendo las propiedades de los objetos para
-           * obtener los valores a pintar en cada celda
-           */}
           {data.map((row, index) => (
             <tr
               className="user-select-none"
