@@ -3,9 +3,10 @@ import {
   FaSortUp,
   FaSortDown,
   FaSort,
-  FaFilter,
   FaWindowClose,
+  FaSearch,
 } from "react-icons/fa";
+import { GrStatusGood } from "react-icons/gr";
 /**
  *
  * Componente tabla que recibe como parametro un arreglo de objetos con
@@ -17,7 +18,7 @@ import {
  *  onRowDobleClick:(row) => (e)=>{},
  *  camposOcultos:string[],
  *  onHeaderSort:(campo:{name:string,direction:boolean}) => {},
- *  onFilter:(filterInputs:object) =>{}
+ *  onFilter:(filterInputs:object) => boolean
  * }} props
  *  @param  onHeaderSort evento de ordenamiento de la tabla
  *  @param  onFilter evento que se desencadena al actualizar los filtros. funcion de filtro.
@@ -34,7 +35,7 @@ const Tabla = ({
   const [sortUp, setSortUp] = useState({});
   const [openFilter, setOpenFilter] = useState({});
   const [filterInputs, setFilterInputs] = useState({});
-
+  const [filterError, setFilterError] = useState();
   useEffect(() => {
     let keys = Object.keys(data[0]);
 
@@ -44,6 +45,12 @@ const Tabla = ({
 
     setCampos(keys);
   }, [data, camposOcultos]);
+
+  /**
+   *
+   *  Handlers
+   *
+   */
 
   //controlador del evento de click en el header
   const handleHeaderClick = (campo) => (e) => {
@@ -64,10 +71,21 @@ const Tabla = ({
   };
 
   const handleFilterInput = (e) => {
-    const { name, value } = e.target;
-    const filterInputsTemp = { ...filterInputs, [name]: value };
+    const { name, value, checked, type } = e.target;
+
+    const filterInputsTemp = {
+      ...filterInputs,
+      [name]: type === "checkbox" ? checked : value,
+    };
+
     setFilterInputs(filterInputsTemp);
-    onFilter(filterInputsTemp);
+    setSortUp({});
+    if (!onFilter(filterInputsTemp)) {
+      setFilterError(true);
+      return;
+    }
+
+    setFilterError(undefined);
   };
 
   const handleFilterCancel = (key) => (e) => {
@@ -75,13 +93,65 @@ const Tabla = ({
     handleFilterInput({
       target: { name: key, value: "" },
     });
-    setOpenFilter({ ...openFilter, [key]: false });
+    setOpenFilter({});
+  };
+
+  /**
+   *
+   *  Funciones
+   *
+   */
+
+  //funcion encargada de dibujar los inputs del filtro, correspondiente al tipo de dato.
+  const CrearInputs = (key) => {
+    let Input;
+
+    switch (typeof data[0][key]) {
+      case "number":
+        Input = (
+          <input
+            name={key}
+            type="number"
+            className="form-control-sm"
+            value={filterInputs[key] || ""}
+            onChange={handleFilterInput}
+            placeholder="Seleccione un N°"
+          />
+        );
+        break;
+      case "boolean":
+        Input = (
+          <div className="form-check form-check-inline">
+            <input
+              name={key}
+              type="checkbox"
+              className="form-check-input position-static"
+              onChange={handleFilterInput}
+              value={filterInputs[key] || false}
+            />
+          </div>
+        );
+        break;
+      default:
+        Input = (
+          <input
+            name={key}
+            value={filterInputs[key] || ""}
+            type="text"
+            className="form-control-sm"
+            onChange={handleFilterInput}
+            placeholder="Ingrese un valor..."
+          />
+        );
+        break;
+    }
+    return Input;
   };
 
   return (
     //empezamos con una tabla html tipica, con algunaas clases de bootstrap basicas para darle forma
-    <div className="table-responsive-md ">
-      <table className="table  shadow   table-striped  table-hover rounded ">
+    <div className="table-responsive-md">
+      <table className="table shadow table-bordered table-striped  table-hover rounded ">
         <thead className="thead-dark ">
           <tr className="">
             {campos.map((key, index) => (
@@ -96,8 +166,9 @@ const Tabla = ({
                     onClick={handleHeaderClick(key)}
                     style={{ cursor: "pointer" }}
                   >
-                    {key}
-                    <span className="mx-1">
+                    <span className="">{key}</span>
+                    <br />
+                    <span className="mx-1 badge">
                       {onHeaderSort ? (
                         sortUp[key] === undefined ? (
                           <FaSort />
@@ -114,42 +185,62 @@ const Tabla = ({
                   {onFilter ? (
                     <div
                       className={` ${
-                        filterInputs[key] && filterInputs[key] !== ""
+                        filterInputs[key] !== undefined &&
+                        filterInputs[key] !== ""
                           ? "bg-primary"
                           : ""
-                      } rounded px-2 text-center align-self-end p-relative`}
+                      } rounded px-2 badge  text-center align-self-end p-relative`}
                       onClick={handleFilterClick(key)}
                     >
-                      <FaFilter style={{ fontSize: ".8rem" }} />
+                      <span style={{ cursor: "pointer" }}>
+                        <FaSearch />
+                      </span>
                       {/* DropDown */}
                       <ul
                         onClick={(e) => e.stopPropagation()}
                         className={`${
                           !openFilter[key] ? "d-none" : ""
-                        } position-absolute bg-light text-dark list-group mt-2`}
+                        } position-absolute bg-light text-dark list-group  mt-2 shadow`}
                         style={{
                           transform: "translateX(-50%)",
                           zIndex: "1000",
                         }}
                       >
-                        <li className="list-group-item">
+                        <li className="list-group-item p-1 m-1 bg-dark text-white ">
                           <h6>Filtro {key}</h6>
                         </li>
+                        {/* Input */}
                         <li className="list-group-item">
-                          <div className="form-group py-1 px-3">
-                            <input
-                              name={key}
-                              value={filterInputs[key] || ""}
-                              type="text"
-                              className="form-control-sm"
-                              onChange={handleFilterInput}
-                            />
-                            <label
-                              onClick={handleFilterCancel(key)}
-                              className="position-absolute px-2 mx-1  text-center "
-                            >
-                              <FaWindowClose />
-                            </label>
+                          <div className="form-group card-body py-1 px-1 m-1 d-flex justify-content-center align-items-center">
+                            <div className="form-group">
+                              {CrearInputs(key)}
+                              <small className="form-text text-danger">
+                                {filterError
+                                  ? "No se hallaron coincidencias."
+                                  : ""}
+                              </small>
+                            </div>
+                            {/* fin Input */}
+                            {/* Botones del Input */}
+                            <div className="form-group  align-self-start">
+                              <label
+                                onClick={handleFilterCancel({})}
+                                className=" px-2 h6 text-center"
+                                style={{ cursor: "pointer" }}
+                              >
+                                <GrStatusGood className="text-black rounded-circle text-center" />
+                              </label>
+                            </div>
+                            <div className="form-group align-self-start">
+                              <label
+                                onClick={handleFilterCancel(key)}
+                                className=" h6 text-center"
+                                style={{ cursor: "pointer" }}
+                              >
+                                <FaWindowClose className="text-black rounded-circle text-center" />
+                              </label>
+                              {/* fin Botones del Input */}
+                            </div>
                           </div>
                         </li>
                       </ul>

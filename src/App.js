@@ -55,7 +55,7 @@ function App() {
                     <div className="col">
                       <DataTable
                         data={datosState}
-                        camposOcultos={["userId"]}
+                        camposOcultos={[]}
                         itemsPorPagina={5}
                       />
                     </div>

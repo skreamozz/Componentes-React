@@ -47,6 +47,7 @@ const DataTable = ({
     let dataFiltradaTemp = data;
     campos.forEach((campo) => {
       if (value[campo] === "") return;
+
       switch (typeof data[0][campo]) {
         case "number":
           dataFiltradaTemp = dataFiltradaTemp.filter(
@@ -65,12 +66,13 @@ const DataTable = ({
           break;
       }
     });
-    console.log(dataFiltradaTemp.length);
+
     if (dataFiltradaTemp.length > 0) {
       setDataFiltrada(dataFiltradaTemp);
-    } else {
-      setDataFiltrada(data);
+      return true;
     }
+    setDataFiltrada(data);
+    return false;
   };
 
   return (
