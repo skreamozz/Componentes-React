@@ -1,8 +1,6 @@
 import Tabla from "../tabla/Tabla";
 import Paginacion from "../paginacion/Paginacion";
-import usePaginacion from "../../hooks/usePaginacion";
-import useSorter from "../../hooks/useSorter";
-import { useEffect, useState } from "react";
+import { usePaginacion, useSorter, useFilter } from "../../hooks";
 
 /**
  *
@@ -25,55 +23,12 @@ const DataTable = ({
   onRowClick,
   onRowDobleClick,
 }) => {
-  const [dataFiltrada, setDataFiltrada] = useState([{}]);
+  const [dataFiltrada, setDataFiltrada, filtrar] = useFilter(data);
+  const [handleHeaderSort] = useSorter(dataFiltrada, setDataFiltrada);
   const { dataPaginada, paginaActual, handlePaginacion } = usePaginacion(
     itemsPorPagina,
     dataFiltrada
   );
-  const [handleHeaderSort] = useSorter(dataFiltrada, setDataFiltrada);
-
-  useEffect(() => {
-    setDataFiltrada(data);
-  }, [data]);
-
-  /**
-   *
-   *    Metodos
-   *
-   */
-
-  const filtrar = (value) => {
-    const campos = Object.keys(value);
-    let dataFiltradaTemp = data;
-    campos.forEach((campo) => {
-      if (value[campo] === "") return;
-
-      switch (typeof data[0][campo]) {
-        case "number":
-          dataFiltradaTemp = dataFiltradaTemp.filter(
-            (dato) => dato[campo] === parseInt(value[campo])
-          );
-          break;
-        case "boolean":
-          dataFiltradaTemp = dataFiltradaTemp.filter(
-            (dato) => dato[campo].toString() === value[campo].toString()
-          );
-          break;
-        default:
-          dataFiltradaTemp = dataFiltradaTemp.filter((dato) =>
-            dato[campo].includes(value[campo])
-          );
-          break;
-      }
-    });
-
-    if (dataFiltradaTemp.length > 0) {
-      setDataFiltrada(dataFiltradaTemp);
-      return true;
-    }
-    setDataFiltrada(data);
-    return false;
-  };
 
   return (
     <>

@@ -53,11 +53,7 @@ function App() {
                 render={() => (
                   <div className="row justify-content-center align-items-center vh-100">
                     <div className="col">
-                      <DataTable
-                        data={datosState}
-                        camposOcultos={[]}
-                        itemsPorPagina={5}
-                      />
+                      <DataTable data={datosState} itemsPorPagina={5} />
                     </div>
                   </div>
                 )}
