@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
-import { BsArchiveFill, BsLayers, BsSearch, BsTable } from "react-icons/bs";
+import { BsLayoutWtf, BsLayers, BsSearch, BsTable } from "react-icons/bs";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import { Abm, DataTable, Lupa, Modal, SlideMenu } from "./componentes";
+import {
+  Abm,
+  DataTable,
+  Lupa,
+  Modal,
+  Dashboard,
+  SlideMenu,
+} from "./componentes";
 
 function App() {
   //estado que permite actualizar el componente cuando se modifican los datos
@@ -58,6 +65,7 @@ function App() {
                   </div>
                 )}
               />
+              <Route path="/Dashboard" exact component={Dashboard} />
               <Route path="/" />
             </Switch>
 
@@ -70,23 +78,24 @@ function App() {
                 },
                 { to: "/lupa", icono: <BsSearch />, texto: "Lupa" },
                 {
-                  icono: <BsArchiveFill />,
-                  texto: "Files",
-                  sub: [
-                    {
-                      to: "/DataTable",
-                      icono: <BsTable />,
-                      texto: "DataTable",
-                    },
-                    { to: "/Abm", icono: <BsLayers />, texto: "Abm" },
-                  ],
+                  to: "/DataTable",
+                  icono: <BsTable />,
+                  texto: "DataTable",
                 },
                 {
-                  icono: <BsArchiveFill />,
-                  texto: "Files",
+                  to: "/Dashboard",
+                  icono: <BsLayoutWtf />,
+                  texto: "Dashboard",
+                },
+                {
+                  icono: <BsLayoutWtf />,
+                  texto: "Dashboard",
                   sub: [
-                    { to: "/Abm", icono: <BsLayers />, texto: "Abm" },
-                    { to: "/Abm", icono: <BsLayers />, texto: "Abm" },
+                    {
+                      to: "/Dashboard",
+                      icono: <BsLayoutWtf />,
+                      texto: "Dashboard",
+                    },
                   ],
                 },
               ]}

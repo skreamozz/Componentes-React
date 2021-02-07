@@ -6,3 +6,4 @@ export { default as Abm } from "./abmGen/Abm";
 export { default as Lupa } from "./lupa/Lupa";
 export { default as SlideMenu } from "./slideMenu/SlideMenu";
 export { default as DataTable } from "./dataTable/DataTable";
+export { default as Dashboard } from "./dashBoard/Dashboard";

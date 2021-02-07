@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { AiOutlineMenu } from "react-icons/ai";
 import { IconContext } from "react-icons";
 import { useEffect, useState } from "react";
@@ -6,16 +6,16 @@ import "./SlideMenu.css";
 
 /**
  *
- * @param {[{to:string,icono:Icon, texto:string}]} param0
+ * @param {[{to:string,icono:Icon, texto:string, sub:[{}]}]} param0
  *
  * @arugments to: ruta a la que se va a dirigir el Link
  * @arugments icono: icono que se va a mostrar en el elemento
  * @arguments texto: label que va a tener el elemento
+ * @arguments sub: arreglo de items del menu.
  */
 const SlideMenu = ({ Items }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [ItemState, setItemState] = useState([]);
-
   useEffect(() => {
     setItemState(
       Items.map((item) => {
@@ -49,13 +49,14 @@ const SlideMenu = ({ Items }) => {
           <AiOutlineMenu />
         </div>
       </IconContext.Provider>
-      <ul>
+      <ul className="menu">
         {ItemState?.map((item, index) => (
           <div key={index}>
             <li onClick={item.to ? () => {} : handleSubMenu(index)}>
-              <Link className="link" to={item?.to || "#"}>
-                {item.icono} {item.texto}
-              </Link>
+              <NavLink className="link" to={item?.to || "#"}>
+                {item.icono}
+                {isOpen ? item.texto : ""}
+              </NavLink>
             </li>
             {item.sub ? (
               <ul
@@ -64,10 +65,10 @@ const SlideMenu = ({ Items }) => {
               >
                 {item.sub?.map((sub, index) => (
                   <li key={index} className="submenu-item">
-                    <Link to={sub.to} className="link">
+                    <NavLink to={sub.to} className="link">
                       {sub.icono}
-                      {sub.texto}
-                    </Link>
+                      {isOpen ? sub.texto : ""}
+                    </NavLink>
                   </li>
                 ))}
               </ul>

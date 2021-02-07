@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Paginacion, Tabla, Modal } from "../../componentes";
 import { FaTrashAlt, FaPencilAlt } from "react-icons/fa";
 import { BsFillPlusCircleFill } from "react-icons/bs";
-import usePaginacion from "../../hooks/usePaginacion";
+import { usePaginacion } from "../../hooks";
 
 const claseSeleccion = "table-primary";
 
