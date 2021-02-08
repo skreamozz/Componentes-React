@@ -1,4 +1,9 @@
-# proyecto de ejemplo para Adrian.
+# Componentes realizados con ReactJs.
 
-## ejercicio donde se realizan varios componentes dinamicos con react.
+## Listos para su uso. Pensados para acelerar algunos proyectos.
 
+componentes utilizables:
+DataTable,
+Table,
+SlideMenu,
+Modal
