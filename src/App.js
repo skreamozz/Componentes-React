@@ -13,6 +13,7 @@ import {
 function App() {
   //estado que permite actualizar el componente cuando se modifican los datos
   const [datosState, setDatosState] = useState();
+  let publicUrl = process.env.PUBLIC_URL;
   //efecto que se ejecuta cuando se monta el componente, este se encarga de traer los datos
   //de la api
   useEffect(() => {
@@ -34,7 +35,7 @@ function App() {
             {/** Switch que contiene las rutas y los componentes a renderizar*/}
             <Switch>
               <Route
-                path="/abm"
+                path={publicUrl + "/abm"}
                 exact
                 render={() => (
                   <Abm
@@ -46,7 +47,7 @@ function App() {
                 )}
               />
               <Route
-                path="/lupa"
+                path={publicUrl + "/lupa"}
                 exact
                 render={() => (
                   <Modal status={true}>
@@ -55,7 +56,7 @@ function App() {
                 )}
               />
               <Route
-                path="/DataTable"
+                path={publicUrl + "/DataTable"}
                 exact
                 render={() => (
                   <div className="row justify-content-center align-items-center vh-100">
@@ -65,25 +66,29 @@ function App() {
                   </div>
                 )}
               />
-              <Route path="/Dashboard" exact component={Dashboard} />
+              <Route
+                path={publicUrl + "/Dashboard"}
+                exact
+                component={Dashboard}
+              />
               <Route path="/" />
             </Switch>
 
             <SlideMenu
               Items={[
                 {
-                  to: "/Abm",
+                  to: publicUrl + "/Abm",
                   icono: <BsLayers />,
                   texto: "Abm",
                 },
-                { to: "/lupa", icono: <BsSearch />, texto: "Lupa" },
+                { to: publicUrl + "/lupa", icono: <BsSearch />, texto: "Lupa" },
                 {
-                  to: "/DataTable",
+                  to: publicUrl + "/DataTable",
                   icono: <BsTable />,
                   texto: "DataTable",
                 },
                 {
-                  to: "/Dashboard",
+                  to: publicUrl + "/Dashboard",
                   icono: <BsLayoutWtf />,
                   texto: "Dashboard",
                 },
@@ -92,7 +97,7 @@ function App() {
                   texto: "Dashboard",
                   sub: [
                     {
-                      to: "/Dashboard",
+                      to: publicUrl + "/Dashboard",
                       icono: <BsLayoutWtf />,
                       texto: "Dashboard",
                     },
